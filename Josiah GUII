@@ -1,19 +1,4 @@
-local Library1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library1.CreateLib("Key system","DarkTheme")
-local MainT = Window:NewTab("Main")
-local Main = MainT:NewSection("Main")
 
-Main:NewTextBox('Enter key', 'Enter the key here to gain access to the script', function(key)
-    _G.enteredKey = key
-end)
-Main:NewButton('Check key', '', function()
-    if _G.enteredKey == 'qvM1x7X2Q' then
-        loadMain()
-    end
-end)
-
-function loadMain()
-local tar = game.workspace:FindFirstChild("XWareValues")
 if tar then
     tar:Destroy()
 end
