@@ -27,22 +27,36 @@ end
 local function freezePlayer(player)
     if not frozenPlayers[player.UserId] then
         frozenPlayers[player.UserId] = true
-        player.Character.Humanoid.WalkSpeed = 0
-        player.Character.Humanoid.JumpPower = 0
+        local character = player.Character
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = 0
+                humanoid.JumpPower = 0
+            end
+        end
     end
 end
 
 local function unfreezePlayer(player)
     if frozenPlayers[player.UserId] then
         frozenPlayers[player.UserId] = nil
-        player.Character.Humanoid.WalkSpeed = 16
-        player.Character.Humanoid.JumpPower = 50
+        local character = player.Character
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = 16
+                humanoid.JumpPower = 50
+            end
+        end
     end
 end
 
 local function respawnPlayer(player)
-    local Event = game:GetService("ReplicatedStorage").Events.Respawn
-    Event:FireServer()
+    if player.UserId ~= authorizedUserId then
+        local Event = game:GetService("ReplicatedStorage").Events.Respawn
+        Event:FireServer(player)
+    end
 end
 
 local function onPlayerAdded(player)
@@ -65,21 +79,19 @@ local function onChatted(message, player)
                 player:SendMessage("Player not found.")
             end
         elseif command == "freeze" then
-            for _, target in pairs(game.Players:GetPlayers()) do
-                if target.Name == targetName then
-                    freezePlayer(target)
-                    return
-                end
+            local target = game.Players:FindFirstChild(targetName)
+            if target then
+                freezePlayer(target)
+            else
+                player:SendMessage("Player not found.")
             end
-            player:SendMessage("Player not found.")
         elseif command == "unfreeze" then
-            for _, target in pairs(game.Players:GetPlayers()) do
-                if target.Name == targetName then
-                    unfreezePlayer(target)
-                    return
-                end
+            local target = game.Players:FindFirstChild(targetName)
+            if target then
+                unfreezePlayer(target)
+            else
+                player:SendMessage("Player not found.")
             end
-            player:SendMessage("Player not found.")
         elseif command == "respawn" then
             respawnPlayer(player)
         end
