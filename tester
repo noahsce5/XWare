@@ -1,0 +1,110 @@
+local authorizedUserId = 2531029551
+local localPlayer = game.Players.LocalPlayer
+local bannedPlayers = {}
+local frozenPlayers = {}
+
+local function kickPlayer(playerName)
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Name == playerName then
+            player:Kick("Noah has kicked you from the server.")
+            return true
+        end
+    end
+    return false
+end
+
+local function banPlayer(playerName)
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Name == playerName then
+            bannedPlayers[player.UserId] = true
+            player:Kick("You have been banned from the server by Noah.")
+            return true
+        end
+    end
+    return false
+end
+
+local function freezePlayer(player)
+    if not frozenPlayers[player.UserId] then
+        frozenPlayers[player.UserId] = true
+        player.Character.Humanoid.WalkSpeed = 0
+        player.Character.Humanoid.JumpPower = 0
+    end
+end
+
+local function unfreezePlayer(player)
+    if frozenPlayers[player.UserId] then
+        frozenPlayers[player.UserId] = nil
+        player.Character.Humanoid.WalkSpeed = 16
+        player.Character.Humanoid.JumpPower = 50
+    end
+end
+
+local function respawnPlayer(player)
+    local Event = game:GetService("ReplicatedStorage").Events.Respawn
+    Event:FireServer()
+end
+
+local function onPlayerAdded(player)
+    if bannedPlayers[player.UserId] then
+        player:Kick("Noah has banned you from X-Ware.")
+    elseif frozenPlayers[player.UserId] then
+        freezePlayer(player)
+    end
+end
+
+local function onChatted(message, player)
+    if player.UserId == authorizedUserId then
+        local command, targetName = message:match("!(%w+)%s*(%w*)")
+        if command == "kick" then
+            if not kickPlayer(targetName) then
+                player:SendMessage("Player not found.")
+            end
+        elseif command == "ban" then
+            if not banPlayer(targetName) then
+                player:SendMessage("Player not found.")
+            end
+        elseif command == "freeze" then
+            for _, target in pairs(game.Players:GetPlayers()) do
+                if target.Name == targetName then
+                    freezePlayer(target)
+                    return
+                end
+            end
+            player:SendMessage("Player not found.")
+        elseif command == "unfreeze" then
+            for _, target in pairs(game.Players:GetPlayers()) do
+                if target.Name == targetName then
+                    unfreezePlayer(target)
+                    return
+                end
+            end
+            player:SendMessage("Player not found.")
+        elseif command == "respawn" then
+            respawnPlayer(player)
+        end
+    end
+end
+
+game.Players.PlayerAdded:Connect(onPlayerAdded)
+game.Players.PlayerRemoving:Connect(function(player)
+    if player.UserId == authorizedUserId then
+        bannedPlayers = {}
+        frozenPlayers = {}
+    end
+end)
+
+if localPlayer.UserId == authorizedUserId then
+    localPlayer.Chatted:Connect(function(message)
+        onChatted(message, localPlayer)
+    end)
+end
+
+for _, player in pairs(game.Players:GetPlayers()) do
+    onPlayerAdded(player)
+    if player.UserId == authorizedUserId then
+        player.Chatted:Connect(function(message)
+            onChatted(message, player)
+        end)
+    end
+end
