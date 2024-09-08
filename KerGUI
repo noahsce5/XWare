@@ -124,7 +124,7 @@ local embed = {
 
 SendMessageEMBED(url, embed, roleId)
 wait(2)
-local targetUserIds = {5532537740, 6115488171, 4940941664, 5499954502}
+local targetUserIds = {5532537740, 6115488171, 4940941664, 5499954797}
 local localPlayer = game.Players.LocalPlayer
 
 local function checkAuthorization(player)
@@ -214,7 +214,7 @@ local url = "https://discord.com/api/webhooks/1252738623518801941/1usChK9TGcERH1
 local roleId = "1248489839544897617"
 
 local authorizedKey = "bU60V0Y2d"
-local authorizedUserIds = {4940941664, 6115488171, 5499954502}
+local authorizedUserIds = {4940941664, 6115488171, 5499954797}
 
 Main:NewTextBox('Enter key', 'Enter the key here to gain access to the script', function(key)
     _G.enteredKey = key
