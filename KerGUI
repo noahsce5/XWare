@@ -3569,33 +3569,15 @@ Player.Chatted:Connect(function(Message)
         end
     end
 end)
-local Ban1 = game:GetService("ReplicatedStorage").Events:FindFirstChild("ModBan")
-local Ban2 = game:GetService("ReplicatedStorage").Events:FindFirstChild("BanClient")
-local Ban3 = game:GetService("ReplicatedStorage").Events:FindFirstChild("Ban")
-local Ban4 = game:GetService("ReplicatedStorage").Events:FindFirstChild("idontexploit")
-local Ban5 = game:GetService("ReplicatedStorage").Events:FindFirstChild("logAction")
-local Ban6 = game:GetService("ReplicatedStorage").Events:FindFirstChild("logAction")
-
-while _G.ANTIBAN == true do
-    if Ban1 then
-        Ban1:Destroy()
-    end
-    if Ban2 then
-        Ban2:Destroy()
-    end
-    if Ban3 then
-        Ban3:Destroy()
-    end
-    if Ban4 then
-        Ban4:Destroy()
-    end
-    if Ban5 then
-        Ban5:Destroy()
-    end
-    if Ban6 then
-        Ban6:Destroy()
-    end
-    wait()
+if game:GetService("Players").LocalPlayer.Character:WaitForChild("Client") then   
+    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Client").Disabled = true
+end
+if game:GetService("Players").LocalPlayer.Character:WaitForChild("Client") then   
+    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Client").Disabled = true
+end
+task.wait(3)
+if game:GetService("Players").LocalPlayer.Character:WaitForChild("Client") then   
+    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Client").Disabled = false
 end
 M:NewButton("Change Name", "", function()
 	_G.auto_name = false
